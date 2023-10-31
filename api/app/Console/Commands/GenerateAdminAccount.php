@@ -50,6 +50,8 @@ class GenerateAdminAccount extends Command implements PromptsForMissingInput
                 'password' => $this->argument('password'),
                 'admin' => true
             ]);
+
+            $admin->markEmailAsVerified();
         }
 
         $this->line('Admin account is created.');

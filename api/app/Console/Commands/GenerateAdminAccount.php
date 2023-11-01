@@ -22,7 +22,7 @@ class GenerateAdminAccount extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Generate a new admin account.';
 
     /**
      * Execute the console command.

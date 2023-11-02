@@ -27,9 +27,9 @@ export const useAuthStore = defineStore({
                 localStorage.setItem('admin', this.admin);
                 
                 if (this.admin) {
-                    router.push('/admin/dashboard');
+                    router.push(this.returnUrl || '/admin/dashboard');
                 } else {
-                    router.push(this.returnUrl || '/');
+                    router.push(this.returnUrl || '/staff/dashboard');
                 }
 
             }).catch(e => {
@@ -44,6 +44,7 @@ export const useAuthStore = defineStore({
                 this.admin = false;
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
+                localStorage.removeItem('admin');
                 router.push('/login');
             });
         }

@@ -26,7 +26,10 @@ class StaffController extends Controller
 
         $token = $staff->createToken('staff')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'token' => $token,
+            'user' => auth()->user()
+        ]);
     }
 
     /**

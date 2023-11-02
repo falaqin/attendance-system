@@ -37,7 +37,8 @@ class AttendanceRecordController extends Controller
      */
     public function update($id, Request $request, AttendanceReport $attendanceReport)
     {
-        $attendanceReport = $attendanceReport->find($id)->update($request->only([
+        $attendanceReport = $attendanceReport->find($id);
+        $attendanceReport->update($request->only([
             'status',
             'time_clocked_in',
             'time_clocked_out'
@@ -54,7 +55,8 @@ class AttendanceRecordController extends Controller
      */
     public function destroy($id, AttendanceReport $attendanceReport)
     {
-        $attendanceReport = $attendanceReport->find($id)->delete();
+        $attendanceReport = $attendanceReport->find($id);
+        $attendanceReport->delete();
 
         return response()->json([
             'message' => 'success',

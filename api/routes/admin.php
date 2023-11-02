@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AdminController::class, 'login']);
-Route::get('/logout', [AdminController::class, 'logout'])->middleware(['auth:sanctum']);
-
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::prefix('staff')->group(function() {
         Route::post('create', [RegisterStaffController::class, 'store']);

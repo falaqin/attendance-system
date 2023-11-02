@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// This login and logout route can be used by both admin and staff.
 Route::post('/login', [StaffController::class, 'login']);
 Route::get('/logout', [StaffController::class, 'logout'])->middleware(['auth:sanctum']);
 

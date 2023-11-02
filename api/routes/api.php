@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Staff\StaffController;
-use App\Http\Controllers\StaffAttendanceController;
+use App\Http\Controllers\Staff\StaffAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

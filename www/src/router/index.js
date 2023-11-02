@@ -48,8 +48,15 @@ const router = createRouter({
       children: [
         {
           path: 'dashboard',
+          show: 'Dashboard',
           name: 'StaffDashboard',
           component: () => import('../views/staff/Dashboard.vue'),
+        },
+        {
+          path: 'attendance',
+          show: 'Attendance',
+          name: 'StaffAttendance',
+          component: () => import('../views/staff/Attendance.vue'),
         },
       ],
     },

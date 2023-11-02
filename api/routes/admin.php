@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AttendanceRecordController;
+use App\Http\Controllers\Admin\RegisterStaffController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AdminController::class, 'login']);
+Route::get('/logout', [AdminController::class, 'logout'])->middleware(['auth:sanctum']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
-    Route::get('/logout', [AdminController::class, 'logout']);
+    Route::prefix('staff')->group(function() {
+        Route::post('create', [RegisterStaffController::class, 'store']);
+        Route::put('{id}/update', [RegisterStaffController::class, 'update']);
+        Route::delete('{id}/delete', [RegisterStaffController::class, 'destroy']);
+    });
+
+    Route::apiResource('attendance', AttendanceRecordController::class);
 });

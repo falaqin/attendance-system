@@ -2,13 +2,13 @@
 namespace App\Services;
 use App\Models\Setting;
 
-class SettingsService
+class SettingService
 {
-    protected $settings;
+    public $settings;
 
-    private static $instance;
+    public static $instance;
 
-    private function __construct()
+    public function __construct()
     {
         $this->settings = collect();
     }

@@ -17,15 +17,16 @@ class AdminController extends Controller
      */
     public function login(AdminLoginRequest $request): JsonResponse
     {
-        \Auth::guard('admin')->attempt($request->only('username', 'password'));
+        // Apparently guard doesn't work with sanctum, so we resort with no guards.
+        \Auth::attempt($request->only('username', 'password'));
 
-        // we create the sanctum auth and return as plain token.
-        if (!$admin = \Auth::guard('admin')->user()) {
+        if (!$admin = \Auth::user()) {
             return response()->json([
                 'message' => 'Unsuccessful'
             ], HttpStatusCode::BAD_REQUEST->value);
         }
 
+        // we create the sanctum auth and return as plain token.
         $token = $admin->createToken('admin')->plainTextToken;
 
         return response()->json(['token' => $token]);

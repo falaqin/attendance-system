@@ -15,16 +15,16 @@ class StaffController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        \Auth::guard('staff')->attempt($request->only('username', 'password'));
+        \Auth::attempt($request->only('username', 'password'));
 
         // we create the sanctum auth and return as plain token.
-        if (!$admin = \Auth::guard('staff')->user()) {
+        if (!$staff = \Auth::user()) {
             return response()->json([
                 'message' => 'Unsuccessful'
             ], HttpStatusCode::BAD_REQUEST->value);
         }
 
-        $token = $admin->createToken('staff')->plainTextToken;
+        $token = $staff->createToken('staff')->plainTextToken;
 
         return response()->json(['token' => $token]);
     }

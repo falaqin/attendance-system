@@ -26,7 +26,13 @@ class PatchScript extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
-        //
+        $function_name = $this->argument('script');
+
+        if ($function_name and method_exists($this, $function_name)) {
+            $this->$function_name();
+            $this->line('Script executed.');
+            return;
+        }
     }
 
     protected function promptForMissingArgumentsUsing()
@@ -48,11 +54,23 @@ class PatchScript extends Command implements PromptsForMissingInput
             'updated_at' => now()
         ];
 
+        $defaultStartValue = '09:00';
+        $defaultEndValue = '18:00';
+
+        // Check if settings already exist
+        $settings = \App\Models\Setting::whereIn('key', ['start_working_hours', 'end_working_hours'])->get();
+
+        if ($settings->count() == 2) {
+            $this->error('Settings already exist!');
+            return;
+        }
+
         \App\Models\Setting::insert([
-            ['key' => 'start_working_hours', 'value' => '', ...$timestamps],
-            ['key' => 'end_working_hours', 'value' => '', ...$timestamps]
+            ['key' => 'start_working_hours', 'value' => $defaultStartValue, ...$timestamps],
+            ['key' => 'end_working_hours', 'value' => $defaultEndValue, ...$timestamps]
         ]);
 
         $this->line('New settings created');
+        return;
     }
 }

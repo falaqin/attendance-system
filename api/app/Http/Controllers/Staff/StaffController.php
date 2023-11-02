@@ -20,7 +20,7 @@ class StaffController extends Controller
         // we create the sanctum auth and return as plain token.
         if (!$staff = \Auth::user()) {
             return response()->json([
-                'message' => 'Unsuccessful'
+                'message' => 'Username or password is wrong.'
             ], HttpStatusCode::BAD_REQUEST->value);
         }
 

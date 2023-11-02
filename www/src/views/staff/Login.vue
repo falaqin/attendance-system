@@ -27,15 +27,13 @@ const submit = async () => {
       <div>
         <InputLabel for="username" value="Username" />
 
-        <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required
-          autocomplete="username" />
+        <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required />
       </div>
 
       <div class="mt-4">
         <InputLabel for="password" value="Password" />
 
-        <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
-          autocomplete="current-password" />
+        <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
       </div>
 
       <div class="flex items-center justify-end mt-4">

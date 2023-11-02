@@ -5,9 +5,23 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      redirect: '/login'
+    },
+    {
       path: '/login',
       name: 'login',
-      component: () => import('../views/staff/Login.vue')
+      component: () => import('../views/staff/Login.vue'),
+      beforeEnter: async (to) => {
+        const auth = useAuthStore();
+        if (!auth.admin && auth.token) {
+          auth.returnUrl = to.fullPath;
+          return '/staff/dashboard';
+        } else if (auth.admin && auth.token) {
+          auth.returnUrl = to.fullPath;
+          return '/admin/dashboard';
+        }
+      },
     },
     {
       path: '/admin',

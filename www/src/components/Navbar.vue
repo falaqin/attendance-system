@@ -1,11 +1,12 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
 import router from '@/router';  
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores';
 
+const route = useRoute();
 const navigation = reactive([]);
 const currentRoutePath = router.currentRoute.value.path;
 const auth = useAuthStore();
@@ -40,20 +41,23 @@ router.options.routes.forEach((route) => {
     }
 });
 
-const activeRoute = (href, mobileView = false) => {
-    let index = navigation.findIndex((nav) => nav.href == href);
-    let activeIndex = navigation.findIndex((nav) => nav.current == true);
-    navigation[activeIndex].current = false;
-    navigation[index].current = true;
-
-    if (mobileView) {
-        router.push(href);
-    }
-}
-
 const signOut = () => {
     auth.logout();
 }
+
+watch(route, (to) => {
+    let path = to.path;
+
+    navigation.forEach(nav => {
+        if (nav.current && nav.href != path) {
+            nav.current = false;
+        }
+
+        if (nav.href == path) {
+            nav.current = true;
+        }
+    })
+})
 
 </script>
 
@@ -83,12 +87,10 @@ const signOut = () => {
                                 <h1 class="text-gray-700 dark:text-gray-300 cursor-default">Staff</h1>
                             </template>
                         </article>
-                        <!-- <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                            alt="Attendance System" /> -->
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-                            <RouterLink v-for="item in navigation" :key="item.name" :to="item.href" @click="activeRoute(item.href)"
+                            <RouterLink v-for="item in navigation" :key="item.name" :to="item.href" @click="$router.push(item.href)"
                                 :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
                                 :aria-current="item.current ? 'page' : undefined">{{ item.name }}</RouterLink>
                         </div>
@@ -109,9 +111,6 @@ const signOut = () => {
                                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                 <span class="absolute -inset-1.5" />
                                 <span class="sr-only">Open user menu</span>
-                                <!-- <img class="h-8 w-8 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    alt="" /> -->
                                     <UserCircleIcon class="h-8 w-8 rounded-full"/>
                             </MenuButton>
                         </div>
@@ -134,7 +133,7 @@ const signOut = () => {
 
         <DisclosurePanel class="sm:hidden">
             <div class="space-y-1 px-2 pb-3 pt-2">
-                <DisclosureButton v-for="item in navigation" :key="item.name" as="span" @click="activeRoute(item.href, true)"
+                <DisclosureButton v-for="item in navigation" :key="item.name" as="span" @click="$router.push(item.href)"
                     :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
                     :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
             </div>

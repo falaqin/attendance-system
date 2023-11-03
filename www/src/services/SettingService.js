@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export default class StaffService {
-    index() {
-        return axios.get('/api/admin/staff/index', {
+export default class SettingService {
+    index(username, password) {
+        return axios.get('/api/admin/settings', {
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -10,8 +10,8 @@ export default class StaffService {
         })
     }
 
-    create(parameters) {
-        return axios.post('/api/admin/staff/create', parameters, {
+    update(parameters) {
+        return axios.post('/api/admin/settings', parameters, {
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

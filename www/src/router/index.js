@@ -52,6 +52,18 @@ const router = createRouter({
           name: 'AdminStaffRegister',
           component: () => import('../views/admin/RegisterStaff.vue'),
         },
+        {
+          path: 'staff/attendance',
+          name: 'AdminStaffAttendance',
+          show: 'Attendance Records',
+          component: () => import('../views/admin/StaffAttendance.vue'),
+        },
+        {
+          path: 'settings',
+          name: 'AdminSettings',
+          show: 'Settings',
+          component: () => import('../views/admin/Settings.vue'),
+        },
       ],
     },
     {

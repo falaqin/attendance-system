@@ -1,2 +1,2 @@
 export * from './AuthService';
-export * from './AdminAuthService';
+export * from './StaffService';

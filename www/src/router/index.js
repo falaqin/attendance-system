@@ -15,10 +15,8 @@ const router = createRouter({
       beforeEnter: async (to) => {
         const auth = useAuthStore();
         if (!auth.admin && auth.token) {
-          auth.returnUrl = to.fullPath;
           return '/staff/dashboard';
         } else if (auth.admin && auth.token) {
-          auth.returnUrl = to.fullPath;
           return '/admin/dashboard';
         }
       },
@@ -30,7 +28,6 @@ const router = createRouter({
       beforeEnter: async (to) => {
         const auth = useAuthStore();
         if (!auth.admin && auth.token) {
-          auth.returnUrl = to.fullPath;
           return '/staff/dashboard';
         } else if (!auth.admin && !auth.token) {
           auth.returnUrl = to.fullPath;
@@ -41,7 +38,19 @@ const router = createRouter({
         {
           path: 'dashboard',
           name: 'AdminDashboard',
+          show: 'Dashboard',
           component: () => import('../views/admin/Dashboard.vue'),
+        },
+        {
+          path: 'staff',
+          name: 'AdminStaff',
+          show: 'Staff',
+          component: () => import('../views/admin/Staff.vue'),
+        },
+        {
+          path: 'staff/register',
+          name: 'AdminStaffRegister',
+          component: () => import('../views/admin/RegisterStaff.vue'),
         },
       ],
     },
@@ -52,7 +61,6 @@ const router = createRouter({
       beforeEnter: async (to) => {
         const auth = useAuthStore();
         if (auth.admin && auth.token) {
-          auth.returnUrl = to.fullPath;
           return '/admin/dashboard';
         } else if (!auth.admin && !auth.token) {
           auth.returnUrl = to.fullPath;

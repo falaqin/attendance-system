@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::prefix('staff')->group(function() {
+        Route::get('index', [RegisterStaffController::class, 'index']);
         Route::post('create', [RegisterStaffController::class, 'store']);
         Route::put('{id}/update', [RegisterStaffController::class, 'update']);
         Route::delete('{id}/delete', [RegisterStaffController::class, 'destroy']);

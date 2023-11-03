@@ -8,10 +8,24 @@ import { useAuthStore } from '@/stores';
 
 const navigation = reactive([]);
 const currentRoutePath = router.currentRoute.value.path;
+const auth = useAuthStore();
+
 
 router.options.routes.forEach((route) => {
     // Check if the route has a name and is not empty
-    if (route.name == 'StaffLayout') {
+    if (route.name == 'StaffLayout' && !auth.admin) {
+        if (route.children) {
+            route.children.forEach((childRoute) => {
+                if (childRoute.show) {
+                    navigation.push({
+                        name: childRoute.show,
+                        href: `${route.path}/${childRoute.path}`,
+                        current: `${route.path}/${childRoute.path}` === `${currentRoutePath}`,
+                    });
+                }
+            })
+        }
+    } else if (route.name == 'AdminLayout' && auth.admin) {
         if (route.children) {
             route.children.forEach((childRoute) => {
                 if (childRoute.show) {
@@ -33,14 +47,12 @@ const activeRoute = (href, mobileView = false) => {
     navigation[index].current = true;
 
     if (mobileView) {
-        // console.log(Router);
         router.push(href);
     }
 }
 
 const signOut = () => {
-    let authStore = useAuthStore();
-    authStore.logout();
+    auth.logout();
 }
 
 </script>
@@ -63,8 +75,16 @@ const signOut = () => {
                 </div>
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex flex-shrink-0 items-center">
-                        <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                            alt="Attendance System" />
+                        <article class="prose">
+                            <template v-if="auth.admin">
+                                <h1 class="text-gray-700 dark:text-gray-300 cursor-default">Admin</h1>
+                            </template>
+                            <template v-else-if="!auth.admin">
+                                <h1 class="text-gray-700 dark:text-gray-300 cursor-default">Staff</h1>
+                            </template>
+                        </article>
+                        <!-- <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                            alt="Attendance System" /> -->
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">

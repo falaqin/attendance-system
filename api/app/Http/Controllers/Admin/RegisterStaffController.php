@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 class RegisterStaffController extends Controller
 {
     /**
+     * Returns all staffs
+     *
+     * @return JsonResponse
+     */
+    public function index() : JsonResponse
+    {
+        $staffs = User::where('admin', false)->get();
+        return response()->json([
+            'message' => 'Success',
+            'staffs' => $staffs
+        ]);
+    }
+
+    /**
      * Create a new staff.
      *
      * @return JsonResponse

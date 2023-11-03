@@ -13,7 +13,13 @@ class AttendanceRecordController extends Controller
      */
     public function index()
     {
-        $record = AttendanceReport::with('user')->get();
+        $record = AttendanceReport::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            // flatten the user name for easier json access
+            ->each(function($record) {
+                $record->staff = $record->user->name;
+            });
 
         return response()->json([
             'message' => 'success',

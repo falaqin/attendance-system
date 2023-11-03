@@ -19,7 +19,7 @@ class RegisterStaffController extends Controller
      */
     public function index() : JsonResponse
     {
-        $staffs = User::where('admin', false)->get();
+        $staffs = User::where('admin', false)->orderBy('id', 'desc')->get();
         return response()->json([
             'message' => 'Success',
             'staffs' => $staffs
@@ -50,7 +50,7 @@ class RegisterStaffController extends Controller
 
         return response()->json([
             'message' => 'Staff created successfully.',
-            'user' => $staff
+            'staff' => $staff
         ], HttpStatusCode::CREATED->value);
     }
 

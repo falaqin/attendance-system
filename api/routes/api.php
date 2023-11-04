@@ -22,4 +22,5 @@ Route::get('/logout', [StaffController::class, 'logout'])->middleware(['auth:san
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::apiResource('attendance', StaffAttendanceController::class);
+    Route::get('dashboard', [StaffAttendanceController::class, 'dashboard']);
 });

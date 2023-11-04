@@ -6,6 +6,7 @@ use App\Enums\AttendanceStatus;
 use App\Enums\HttpStatusCode;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceReport;
+use Carbon\Carbon as CarbonCarbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -31,13 +32,75 @@ class StaffAttendanceController extends Controller
     }
 
     /**
+     * Get all dashboard dependencies for clock in and clock out
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dashboard(Request $request) : JsonResponse
+    {
+        $latestAttendance = $request->user()->getLatestAttendance;
+
+        // If there is no latest attendance available, it means user is new. So we return a response with ability to clock in.
+        if (!$latestAttendance) {
+            return response()->json([
+                'message' => 'Successful',
+                'dashboard' => [
+                    'can_clock_in' => true,
+                    'can_clock_out' => false,
+                    'start_time' => $this->start_hour,
+                    'end_time' => $this->end_hour,
+                    'latest_attendance' => null,
+                    'is_today' => false
+                ]
+            ]);
+        }
+
+        // if clock in is today, meaning already clocked in today
+        // if clock out is null, meaning haven't clocked out yet.
+        // if clock out is today, meaning today is done.
+
+        $can_clock_in = null;
+        $can_clock_out = null;
+
+        if ($latestAttendance->time_clocked_in->isToday()) {
+            if (!$latestAttendance->time_clocked_out) {
+                $can_clock_out = true;
+                $can_clock_in = false;
+            } else {
+                $can_clock_in = false;
+                $can_clock_out = false;
+            }
+        } else if ($latestAttendance->time_clocked_in->isPast()) {
+            $can_clock_in = true;
+            $can_clock_out = false;
+        }
+
+        return response()->json([
+            'message' => 'Successful',
+            'dashboard' => [
+                'can_clock_in' => $can_clock_in,
+                'can_clock_out' => $can_clock_out,
+                'start_time' => $this->start_hour,
+                'end_time' => $this->end_hour,
+                'latest_attendance' => $latestAttendance,
+                'is_today' => $latestAttendance->time_clocked_in->isToday()
+            ]
+        ]);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $attendance = AttendanceReport::where([
             'user_id' => $this->staff->id
-        ])->get();
+        ])
+            ->get()
+            ->each(function ($att) {
+                $att->name = $att->user->name;
+            });
 
         return response()->json([
             'message' => 'success',
@@ -68,7 +131,7 @@ class StaffAttendanceController extends Controller
             if ($latestAttendance and !$latestAttendance->time_clocked_out and $latestAttendance->time_clocked_in->isToday()) {
                 return response()->json([
                     'message' => 'User has not clocked out yet!',
-                ]);
+                ], HttpStatusCode::BAD_REQUEST->value);
             }
 
             // Usually when staff clocks in now a new date, attendance has not been created yet. So we create a new one.
@@ -80,37 +143,13 @@ class StaffAttendanceController extends Controller
 
         } else {
             return response()->json([
-                'message' => 'unsuccessful'
+                'message' => 'User has not clocked in yet!'
             ], HttpStatusCode::BAD_REQUEST->value);
         }
 
         return response()->json([
-            'message' => 'success',
+            'message' => 'Clocked!',
             'record' => $this->staff->getLatestAttendance()->first()
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

@@ -6,7 +6,12 @@ import StaticBlock from '@/components/StaticBlock.vue';
 import { useSettingStore } from '@/stores';
 
 const setting = useSettingStore();
-await setting.index();
+
+const getSettings = async () => {
+    await setting.index();
+}
+
+getSettings()
 
 const confirm = () => {
     setting.update();
@@ -21,7 +26,7 @@ const convertSnakeToNormal = (input) => {
 </script>
 
 <template>
-    <StaticBlock>
+    <StaticBlock v-if="setting.settings">
         <template v-for="config, index in setting.settings">
             <div :class="[index > 0 ? 'mt-4' : '']">
                 <InputLabel :value="convertSnakeToNormal(config.key)" class="timepicker-ui-input" />

@@ -71,7 +71,12 @@ const orderedHeaders = computed(() => {
             <tbody>
                 <tr v-for="item, index in data" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td v-for="header in orderedHeaders" :key="header.key" class="px-6 py-4">
-                        {{ item[header.key] }}
+                        <template v-if="$slots[header.key]">
+                            <slot :name="header.key" :item="item"></slot>
+                        </template>
+                        <template v-else>
+                            {{ item[header.key] }}
+                        </template>
                     </td>
                     <template v-if="enableAction">
                         <td class="px-6 py-4">

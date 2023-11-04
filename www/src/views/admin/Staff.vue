@@ -7,8 +7,15 @@ import StaffModal from '@/components/StaffModal.vue'
 let staffModal = ref();
 
 const staff = useStaffStore();
-await staff.index();
-let staffs = ref(staff.staffs);
+let staffs = ref([]);
+
+const getStaffs = async () => {
+  await staff.index();
+  staffs.value = staff.staffs
+}
+
+getStaffs();
+
 for (let index = 0; index < staffs.value.length; index++) {
   const element = staffs.value[index];
 
